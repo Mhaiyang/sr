@@ -1,8 +1,12 @@
+#!/usr/bin/env bash
 #MSRN for train
 cd Train/
 
 # MSRN x2  LR: 48 * 48  HR: 96 * 96
-python3 main.py --template MSRN --save MSRN_X2 --scale 2 --reset --save_results --patch_size 96 --ext sep_reset
+python3 main.py --template MSRN --save MSRN_X2 --scale 2 --reset --save_results --patch_size 96 --ext sep
+
+python3 main.py --template MHY1 --save MHY1_X2 --scale 2 --reset --save_results --patch_size 96 --ext sep
+
 
 # MSRN x3  LR: 48 * 48  HR: 144 * 144
 python3 main.py --template MSRN --save MSRN_X3 --scale 3 --reset --save_results --patch_size 144 --ext sep_reset

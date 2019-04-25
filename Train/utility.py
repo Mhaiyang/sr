@@ -142,8 +142,8 @@ def calc_psnr(sr, hr, scale, rgb_range, benchmark=False):
             diff.mul_(convert).div_(256)
             diff = diff.sum(dim=1, keepdim=True)
     else:
-        # shave = scale + 6
-        shave = scale
+        shave = scale + 6
+        # shave = scale
 
     valid = diff[:, :, shave:-shave, shave:-shave]
     mse = valid.pow(2).mean()
