@@ -56,3 +56,14 @@ def set_template(args):
         args.n_feats = 64
         args.chop = True
 
+    if args.template.find('MHY2') >= 0:
+        args.model = 'MHY2'
+        args.n_blocks = 8
+        args.n_feats = 64
+        args.chop = True
+
+    if args.template.find('MHY3') >= 0:
+        args.model = 'MHY3'
+        args.n_blocks = 8
+        args.n_feats = 64
+        args.chop = True
