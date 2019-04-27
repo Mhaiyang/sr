@@ -1,9 +1,12 @@
 from model import common
+from model import attention
 import torch
 import torch.nn as nn
 
+
 def make_model(args, parent=False):
     return MHY2(args)
+
 
 class MSRB(nn.Module):
     def __init__(self, conv=common.default_conv, n_feats=64):
@@ -31,10 +34,11 @@ class MSRB(nn.Module):
         output += x
         return output
 
+
 class MHY2(nn.Module):
     def __init__(self, args, conv=common.default_conv):
         super(MHY2, self).__init__()
-        
+
         n_feats = 64
         n_blocks = 8
         kernel_size = 3
@@ -42,12 +46,12 @@ class MHY2(nn.Module):
         act = nn.ReLU(True)
 
         self.n_blocks = n_blocks
-        
+
         # RGB mean for DIV2K
         rgb_mean = (0.4488, 0.4371, 0.4040)
         rgb_std = (1.0, 1.0, 1.0)
         self.sub_mean = common.MeanShift(args.rgb_range, rgb_mean, rgb_std)
-        
+
         # define head module
         modules_head = [conv(args.n_colors, n_feats, kernel_size)]
 
@@ -61,19 +65,17 @@ class MHY2(nn.Module):
         modules_tail = [
             nn.Conv2d(n_feats * (self.n_blocks + 1), n_feats, 1, padding=0, stride=1),
             conv(n_feats, n_feats, kernel_size),
+            attention.CAM_Module(n_feats),
+            attention.PAM_Module(n_feats),
             common.Upsampler(conv, scale, n_feats, act=False),
-            conv(n_feats, args.n_colors, kernel_size)]
+            conv(n_feats, args.n_colors, kernel_size)
+        ]
 
         self.add_mean = common.MeanShift(args.rgb_range, rgb_mean, rgb_std, 1)
 
         self.head = nn.Sequential(*modules_head)
         self.body = nn.Sequential(*modules_body)
-        self.tail1 = nn.Sequential(*modules_tail)
-        self.tail2 = nn.Sequential(*modules_tail)
-        self.tail3 = nn.Sequential(*modules_tail)
-
-        self.alpha = nn.Parameter(torch.zeros([args.n_colors, args.patch_size, args.patch_size]))
-        self.beta = nn.Parameter(torch.zeros([args.n_colors, args.patch_size, args.patch_size]))
+        self.tail = nn.Sequential(*modules_tail)
 
     def forward(self, x):
         x = self.sub_mean(x)
@@ -86,18 +88,10 @@ class MHY2(nn.Module):
             MSRB_out.append(x)
         MSRB_out.append(res)
 
-        res = torch.cat(MSRB_out,1)
-        x1 = self.tail1(res)
-        x2 = self.tail2(res)
-        x3 = self.tail3(res)
-
-        x = x2 + self.alpha * x1 + self.beta * x3
-
-        x1 = self.add_mean(x)
-        x2 = self.add_mean(x)
-        x3 = self.add_mean(x)
+        res = torch.cat(MSRB_out, 1)
+        x = self.tail(res)
         x = self.add_mean(x)
-        return x1, x2, x3, x
+        return x
 
     def load_state_dict(self, state_dict, strict=False):
         own_state = self.state_dict()

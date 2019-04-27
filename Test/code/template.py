@@ -127,3 +127,15 @@ def set_template(args):
         args.n_blocks = 8
         args.n_feats = 64
         args.chop = True
+
+    if args.template.find('MHY1') >= 0:
+        args.model = 'MHY1'
+        args.n_blocks = 8
+        args.n_feats = 64
+        args.chop = True
+
+    if args.template.find('MHY2') >= 0:
+        args.model = 'MHY2'
+        args.n_blocks = 8
+        args.n_feats = 64
+        args.chop = True

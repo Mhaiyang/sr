@@ -13,7 +13,7 @@ parser.add_argument('--n_threads', type=int, default=64,
                     help='number of threads for data loading')
 parser.add_argument('--cpu', action='store_true',
                     help='use cpu only')
-parser.add_argument('--n_GPUs', type=int, default=1,
+parser.add_argument('--n_GPUs', type=int, default=2,
                     help='number of GPUs')
 parser.add_argument('--seed', type=int, default=1,
                     help='random seed')

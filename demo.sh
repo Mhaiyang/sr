@@ -22,7 +22,10 @@ cd Test/code/
 
 
 #MSRN x2
-python main.py --data_test MyImage --scale 2 --model MSRN --pre_train ../model/MSRN_x2.pt --test_only --save_results --chop --save "MSRN" --testpath ../LR/LRBI --testset Set5
+python3 main.py --data_test MyImage --scale 2 --model MSRN --pre_train ../model/MSRN_x2.pt --test_only --save_results --chop --save "MSRN" --testpath ../LR/LRBI --testset Set5
+
+python3 main.py --data_test MyImage --scale 2 --model MHY1 --pre_train ../model/MHY1_x2.pt --test_only --save_results --chop --save "MHY1" --testpath ../LR/LRBI --testset B100
+
 
 #MSRN+ x2
 python main.py --data_test MyImage --scale 2 --model MSRN --pre_train ../model/MSRN_x2.pt --test_only --save_results --chop --self_ensemble --save "MSRN_plus" --testpath ../LR/LRBI --testset Set5

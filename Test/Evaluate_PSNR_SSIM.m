@@ -5,7 +5,7 @@ clear all; close all; clc
 %% set path
 degradation = 'BI'; % BI, BD
 % methods = {'MSRN', 'MSRN_plus'};
-methods = {'MSRN'};
+methods = {'MSRN_plus'};
 dataset = {'Manga109'};
 ext = {'*.jpg', '*.png', '*.bmp'};
 num_method = length(methods);
@@ -57,7 +57,7 @@ for idx_method = 1:num_method
             fprintf(results, '--------Mean--------\n');
             fprintf('--------Mean--------\n');
             fprintf(results, 'x%d: PSNR= %f SSIM= %f\n', scale, mean(PSNR_all), mean(SSIM_all));
-            fprintf('x%d: PSNR= %f SSIM= %f\n', scale, mean(PSNR_all), mean(SSIM_all));
+            fprintf('x%d: PSNR= %.2f SSIM= %.4f\n', scale, mean(PSNR_all), mean(SSIM_all));
         end
     end
 end
